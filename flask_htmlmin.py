@@ -21,10 +21,12 @@ class HTMLMIN(object):
         minify response html to decrease traffic
         """
         if response.content_type == u'text/html; charset=utf-8':
-            response.set_data(
-                minify(response.get_data(as_text=True),
-                       remove_comments=True)
-            )
+            response_text = response.get_data(as_text=True)
+            htmlmin_kwargs = dict(reduce_empty_attributes=False,
+                                  remove_comments=True,
+                                  remove_optional_attribute_quotes=False)
+            minified = minify(response_text, **htmlmin_kwargs)
+            response.set_data(minified)
 
             return response
         return response
